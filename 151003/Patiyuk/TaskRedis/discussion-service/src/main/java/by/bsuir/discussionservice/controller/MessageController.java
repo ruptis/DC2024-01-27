@@ -3,6 +3,7 @@ package by.bsuir.discussionservice.controller;
 import by.bsuir.discussionservice.dto.request.MessageRequestTo;
 import by.bsuir.discussionservice.dto.response.MessageResponseTo;
 import by.bsuir.discussionservice.service.MessageService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -47,23 +48,28 @@ public class MessageController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MessageResponseTo createMessage(@Valid @RequestBody MessageRequestTo message) {
-        return messageService.createMessage(message);
+    public MessageResponseTo createMessage(
+            @Valid @RequestBody MessageRequestTo message,
+            HttpServletRequest request) {
+        return messageService.createMessage(getRequestWithCountry(message, request));
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public MessageResponseTo updateMessage(@Valid @RequestBody MessageRequestTo message) {
-        return messageService.updateMessage(message);
+    public MessageResponseTo updateMessage(
+            @Valid @RequestBody MessageRequestTo message,
+            HttpServletRequest request) {
+        return messageService.updateMessage(getRequestWithCountry(message, request));
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public MessageResponseTo updateMessage(
             @PathVariable Long id,
-            @Valid @RequestBody MessageRequestTo message
+            @Valid @RequestBody MessageRequestTo message,
+            HttpServletRequest request
     ) {
-        return messageService.updateMessage(id, message);
+        return messageService.updateMessage(id, getRequestWithCountry(message, request));
     }
 
     @DeleteMapping("/{id}")
@@ -72,5 +78,16 @@ public class MessageController {
             @PathVariable Long id
     ) {
         messageService.deleteMessage(id);
+    }
+
+    private static MessageRequestTo getRequestWithCountry(MessageRequestTo message, HttpServletRequest request) {
+        return message.country() == null || message.country().isEmpty()
+                ? message.withCountry(getCountry(request))
+                : message;
+    }
+
+    private static String getCountry(HttpServletRequest request) {
+        String requestCountry = request.getLocale().getDisplayCountry();
+        return requestCountry.isEmpty() ? "Unspecified" : requestCountry;
     }
 }

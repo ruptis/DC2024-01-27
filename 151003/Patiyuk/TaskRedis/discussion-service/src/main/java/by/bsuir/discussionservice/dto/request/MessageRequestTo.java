@@ -12,4 +12,7 @@ public record MessageRequestTo(
         String content,
         MessageState state
 ) {
+    public MessageRequestTo withCountry(String country) {
+        return new MessageRequestTo(id, storyId, country, content, state);
+    }
 }

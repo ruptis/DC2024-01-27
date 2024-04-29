@@ -15,6 +15,24 @@ services:
     volumes:
       - data-publisher-service:/data/postgres
 
+  publisher-service:
+    container_name: publisher-service
+    hostname: publisher-service
+    image: kazyshi/distcomp-publisher-service:1.0
+    restart: unless-stopped
+    pull_policy: missing
+    ports:
+      - 24110:24110
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-publisher-service:5432/distcomp
+      - SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka:29092
+      - SPRING_DATA_REDIS_HOST=redis
+      - SERVICES_DISCUSSION_URL=http://discussion-service:24130/api/v1.0
+    depends_on:
+      - postgres-publisher-service
+      - kafka
+      - redis
+
   cassandra-discussion-service:
     container_name: cassandra-discussion-service
     hostname: cassandra-discussion-service
@@ -30,6 +48,23 @@ services:
       CASSANDRA_SEEDS: cassandra-discussion-service
     volumes:
       - data-discussion-service:/var/lib/cassandra
+
+  discussion-service:
+    container_name: discussion-service
+    hostname: discussion-service
+    image: kazyshi/distcomp-discussion-service:1.0
+    restart: unless-stopped
+    pull_policy: missing
+    ports:
+      - 24130:24130
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:cassandra://cassandra-discussion-service:9042/distcomp?localdatacenter=DC1
+      - SPRING_LIQUIBASE_URL=jdbc:cassandra://cassandra-discussion-service:9042/distcomp?localdatacenter=DC1&compliancemode=Liquibase
+      - SPRING_CASSANDRA_CONTACT-POINTS=cassandra-discussion-service
+      - SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka:29092
+    depends_on:
+      - cassandra-discussion-service
+      - kafka
 
   zookeeper:
     container_name: zookeeper

@@ -6,7 +6,7 @@
     <parent>
         <groupId>by.bsuir</groupId>
         <artifactId>TaskRedis</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <artifactId>discussion-service</artifactId>
@@ -54,4 +54,24 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <container>
+                        <jvmFlags>
+                            <jvmFlag>-XX:+UseSerialGC</jvmFlag>
+                            <jvmFlag>-Xss512k</jvmFlag>
+                            <jvmFlag>-XX:MaxRAM=150m</jvmFlag>
+                            <jvmFlag>-XX:+UnlockExperimentalVMOptions</jvmFlag>
+                            <jvmFlag>-XX:+UseContainerSupport</jvmFlag>
+                        </jvmFlags>
+                    </container>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
