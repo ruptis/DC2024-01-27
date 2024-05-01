@@ -7,6 +7,7 @@ import by.bsuir.publisherservice.dto.message.InTopicMessage;
 import by.bsuir.publisherservice.dto.message.Operation;
 import by.bsuir.publisherservice.dto.message.OutTopicMessage;
 import by.bsuir.publisherservice.entity.MessageState;
+import by.bsuir.publisherservice.exception.EntityNotFoundException;
 import by.bsuir.publisherservice.service.kafka.KafkaClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -118,6 +119,6 @@ public class MessageProducerService implements DiscussionServiceClient {
                         topicName
                 ))
                 .filter(OutTopicMessage::isSuccessful)
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("Message with id " + id + " not found"));
     }
 }

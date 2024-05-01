@@ -10,7 +10,7 @@
   </component>
   <component name="PersistenceUnitSettings">
     <persistence-units>
-      <persistence-unit name="Default" defaultSearchScope="Project">
+      <persistence-unit name="Default" defaultIncludeChangeLogFile="discussion-service/src/main/resources/db/changelog/changelog-master.xml" defaultSearchScope="Project">
         <packages>
           <package value="by.bsuir.publisherservice" />
         </packages>

@@ -32,7 +32,7 @@ public class KafkaClientService {
         log.info("Sending message: {}", message);
         try {
             kafkaTemplate.send(topic, id, message);
-            return future.get(1, TimeUnit.SECONDS);
+            return future.get(10, TimeUnit.SECONDS);
         } catch (TimeoutException e) {
             cache.remove(id);
             log.error("Timeout while waiting for response");

@@ -75,6 +75,9 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void deleteMessage(Long id) {
         messageRepository.findByKey_Id(id)
-                .ifPresent(messageRepository::delete);
+                .ifPresentOrElse(messageRepository::delete,
+                        () -> {
+                            throw new EntityNotFoundException("Message with id " + id + " not found");
+                        });
     }
 }

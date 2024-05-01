@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tbl_creators")
+@Table(name = "tbl_creator")
 public class Creator implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +26,10 @@ public class Creator implements BaseEntity<Long> {
     private String password;
 
     @Column(length = 64, nullable = false)
-    private String firstName;
+    private String firstname;
 
     @Column(length = 64, nullable = false)
-    private String lastName;
+    private String lastname;
 
     @OneToMany(mappedBy = "creator",
             fetch = FetchType.LAZY,
